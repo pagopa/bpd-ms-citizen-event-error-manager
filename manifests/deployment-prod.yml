@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bpdmscitizeneventerrormanager
+spec:
+  replicas: 1  
+  selector:
+    matchLabels:
+      app: bpdmscitizeneventerrormanager
+  template:
+    metadata:
+      labels:
+        app: bpdmscitizeneventerrormanager
+    spec:
+      containers:
+        - name: bpdmscitizeneventerrormanager
+          image: cstarprodregistry.azurecr.io/bpdmscitizeneventerrormanager
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - secretRef:
+                name: postgres-credentials
+            - secretRef:
+                name: bpdmscitizeneventerrormanager
+            - configMapRef:
+                name: eventhub-logging
+            - configMapRef:
+                name: eventhub-common
+            - configMapRef:
+                name: bpdmscitizeneventerrormanager
+            - configMapRef:
+                name: jvm
+      hostAliases:
+        - hostnames:
+            - u87cstarprod.servicebus.windows.net
+          ip: 10.70.132.4

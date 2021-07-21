@@ -1,0 +1,16 @@
+apiVersion : apps/v1beta1
+kind: Deployment
+metadata:
+  name: bpdmscitizeneventerrormanager
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: bpdmscitizeneventerrormanager
+    spec:
+      containers:
+        - name: bpdmscitizeneventerrormanager
+          image: cstarregistry.azurecr.io/bpdmscitizeneventerrormanager
+          ports:
+          - containerPort: 8080
