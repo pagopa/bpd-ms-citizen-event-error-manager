@@ -3,8 +3,8 @@ package it.gov.pagopa.bpd.citizen_event_error_manager.listener;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.sia.meda.eventlistener.BaseConsumerAwareEventListener;
 import it.gov.pagopa.bpd.citizen_event_error_manager.listener.factory.ModelFactory;
-import it.gov.pagopa.bpd.transaction_error_manager.command.SaveTransactionRecordCommand;
-import it.gov.pagopa.bpd.transaction_error_manager.model.CitizenEventErrorCommandModel;
+import it.gov.pagopa.bpd.citizen_event_error_manager.command.ManageCitizenEventErrorCommand;
+import it.gov.pagopa.bpd.citizen_event_error_manager.model.CitizenEventErrorCommandModel;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
@@ -62,8 +62,8 @@ public class OnCitizenStatusErrorRequestListener extends BaseConsumerAwareEventL
 
             citizenEventErrorCommandModel = citizenEventErrorCommandModelModelFactory
                     .createModel(Pair.of(payload, headers));
-            SaveTransactionRecordCommand command = beanFactory.getBean(
-                    SaveTransactionRecordCommand.class, citizenEventErrorCommandModel);
+            ManageCitizenEventErrorCommand command = beanFactory.getBean(
+                    ManageCitizenEventErrorCommand.class, citizenEventErrorCommandModel);
 
             if (!command.execute()) {
                 throw new Exception("Failed to execute OnCitizenStatusErrorRequestListener");
@@ -98,7 +98,6 @@ public class OnCitizenStatusErrorRequestListener extends BaseConsumerAwareEventL
                     logger.error(error, e);
                 }
             }
-
 
         }
     }

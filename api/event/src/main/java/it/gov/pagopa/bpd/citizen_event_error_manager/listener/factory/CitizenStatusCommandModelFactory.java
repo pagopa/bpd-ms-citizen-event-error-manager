@@ -1,8 +1,8 @@
 package it.gov.pagopa.bpd.citizen_event_error_manager.listener.factory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.gov.pagopa.bpd.transaction_error_manager.model.CitizenEventError;
-import it.gov.pagopa.bpd.transaction_error_manager.model.CitizenEventErrorCommandModel;
+import it.gov.pagopa.bpd.citizen_event_error_manager.model.CitizenEventError;
+import it.gov.pagopa.bpd.citizen_event_error_manager.model.CitizenEventErrorCommandModel;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.kafka.common.header.Headers;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,9 +35,9 @@ public class CitizenStatusCommandModelFactory implements
 
     @Override
     public CitizenEventErrorCommandModel createModel(Pair<byte[], Headers> requestData) {
-        CitizenEventError transaction = parsePayload(requestData.getLeft());
+        CitizenEventError citizenEventError = parsePayload(requestData.getLeft());
         return CitizenEventErrorCommandModel.builder()
-                .payload(transaction)
+                .payload(citizenEventError)
                 .headers(requestData.getRight())
                 .build();
     }
