@@ -1,9 +1,7 @@
 package it.gov.pagopa.bpd.citizen_event_error_manager.publisher.model;
 
 import lombok.*;
-import org.springframework.format.annotation.DateTimeFormat;
 
-import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 
 /**

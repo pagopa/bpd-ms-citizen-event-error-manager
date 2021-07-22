@@ -2,7 +2,6 @@ package it.gov.pagopa.bpd.citizen_event_error_manager.publisher;
 
 import eu.sia.meda.event.BaseEventConnectorTest;
 import eu.sia.meda.util.TestUtils;
-import it.gov.pagopa.bpd.citizen_event_error_manager.publisher.CitizenStatusPublisherConnector;
 import it.gov.pagopa.bpd.citizen_event_error_manager.publisher.model.CitizenStatusData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
