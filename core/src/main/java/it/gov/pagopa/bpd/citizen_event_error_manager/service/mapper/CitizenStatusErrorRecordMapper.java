@@ -26,7 +26,7 @@ public class CitizenStatusErrorRecordMapper implements ModelMapper<CitizenEventE
                 .fiscalCode(entity.getFiscalCode())
                 .updateDateTime(entity.getUpdateDateTime())
                 .enabled(entity.getStatus())
-                .applyTo(entity.getOrigin())
+                .origin(entity.getOrigin())
                 .exceptionMessage(entity.getExceptionMessage())
                 .build();
     }

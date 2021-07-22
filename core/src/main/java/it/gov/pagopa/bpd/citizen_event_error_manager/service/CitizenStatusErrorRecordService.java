@@ -15,5 +15,6 @@ public interface CitizenStatusErrorRecordService {
 
     List<CitizenStatusErrorRecord> findRecordsToResubmit();
 
-    Optional<CitizenStatusErrorRecord> findExistingRecord(String fiscalCode, String origin, String applyTo, OffsetDateTime updateDateTime);
+    Optional<CitizenStatusErrorRecord> findExistingRecord
+            (String fiscalCode, String origin, Boolean status, OffsetDateTime updateDateTime);
 }

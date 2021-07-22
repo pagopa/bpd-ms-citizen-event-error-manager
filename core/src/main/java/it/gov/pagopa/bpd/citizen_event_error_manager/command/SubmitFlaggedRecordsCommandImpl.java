@@ -59,6 +59,7 @@ class SubmitFlaggedRecordsCommandImpl extends BaseCommand<Boolean> implements Su
 
                 List<CitizenStatusErrorRecord> citizenStatusErrorRecordList =
                         citizenStatusErrorRecordService.findRecordsToResubmit();
+
                 for (CitizenStatusErrorRecord citizenStatusErrorRecord : citizenStatusErrorRecordList) {
                     this.callAsyncService(() -> {
 

@@ -16,7 +16,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import java.util.Optional;
+
+import java.time.OffsetDateTime;
+import java.util.*;
 
 /**
  * Base implementation of the ManageCitizenEventErrorCommand, extending Meda BaseCommand class, the command
@@ -34,6 +36,7 @@ class ManageCitizenEventErrorCommandImpl extends BaseCommand<Boolean> implements
     private ModelMapper<CitizenEventError, CitizenStatusErrorRecord> citizenStatusErrorRecordModelMapper;
     private ModelMapper<CitizenStatusErrorRecord, CitizenStatusData> citizenStatusDataModelMapper;
     private Integer maxRetries;
+    private String originsToAutoResend;
 
 
     public ManageCitizenEventErrorCommandImpl(CitizenEventErrorCommandModel citizenEventErrorCommandModel) {
@@ -46,13 +49,15 @@ class ManageCitizenEventErrorCommandImpl extends BaseCommand<Boolean> implements
             BpdCitizenStatusDataPublisherService bpdCitizenStatusDataPublisherService,
             ModelMapper<CitizenEventError, CitizenStatusErrorRecord> citizenStatusErrorRecordModelMapper,
             ModelMapper<CitizenStatusErrorRecord, CitizenStatusData> citizenStatusDataModelMapper,
-            Integer maxRetries) {
+            Integer maxRetries,
+            String originsToAutoResend) {
         this.citizenEventErrorCommandModel = citizenEventErrorCommandModel;
         this.citizenStatusErrorRecordService = citizenStatusErrorRecordService;
         this.bpdCitizenStatusDataPublisherService = bpdCitizenStatusDataPublisherService;
         this.citizenStatusErrorRecordModelMapper = citizenStatusErrorRecordModelMapper;
         this.citizenStatusDataModelMapper = citizenStatusDataModelMapper;
         this.maxRetries = maxRetries;
+        this.originsToAutoResend = originsToAutoResend;
     }
 
     /**
@@ -75,20 +80,27 @@ class ManageCitizenEventErrorCommandImpl extends BaseCommand<Boolean> implements
                     citizenStatusErrorRecordService.findExistingRecord(
                     citizenEventError.getFiscalCode(),
                     citizenEventError.getOrigin(),
-                    citizenEventError.getApplyTo(),
+                    citizenEventError.getEnabled(),
                     citizenEventError.getUpdateDateTime()
             );
 
             CitizenStatusErrorRecord citizenStatusErrorRecord = citizenStatusErrorRecordOpt.orElseGet(
                     () -> citizenStatusErrorRecordModelMapper.mapTo(citizenEventError));
 
-            if (citizenStatusErrorRecord.getNumberOfRetries() <= maxRetries) {
+
+            List<String> originsToAutoResendList = originsToAutoResend != null ?
+                    new ArrayList<>(Arrays.asList(originsToAutoResend.split(","))) : Collections.emptyList();
+
+
+            if (citizenStatusErrorRecord.getNumberOfRetries() <= maxRetries
+                    && originsToAutoResendList.contains(citizenEventError.getOrigin())) {
                 CitizenStatusData citizenStatusData = citizenStatusDataModelMapper.mapTo(citizenStatusErrorRecord);
                 bpdCitizenStatusDataPublisherService.publishBpdCitizenEvent(
                         citizenStatusData, new RecordHeaders());
+                citizenStatusErrorRecord.setNumberOfRetries(citizenStatusErrorRecord.getNumberOfRetries()+1);
+                citizenStatusErrorRecord.setLastResubmitDate(OffsetDateTime.now());
             }
 
-            citizenStatusErrorRecord.setNumberOfRetries(citizenStatusErrorRecord.getNumberOfRetries()+1);
             citizenStatusErrorRecord.setAvailableForResubmit(false);
             citizenStatusErrorRecord.setExceptionMessage(citizenEventError.getExceptionMessage());
             citizenStatusErrorRecordService.saveCitizenStatusErrorRecordService(citizenStatusErrorRecord);
@@ -106,9 +118,14 @@ class ManageCitizenEventErrorCommandImpl extends BaseCommand<Boolean> implements
 
     }
 
-    @Value("${numRetries}")
+    @Value("${it.gov.pagopa.bpd.citizen_event_error_manager.service.CitizenStatusErrorRecordService.numRetries}")
     public void setMaxRetries(Integer maxRetries) {
         this.maxRetries = maxRetries;
+    }
+
+    @Value("${it.gov.pagopa.bpd.citizen_event_error_manager.service.CitizenStatusErrorRecordService.originsToAutoResend}")
+    public void setOriginsToAutoResend(String originsToAutoResend) {
+        this.originsToAutoResend = originsToAutoResend;
     }
 
     @Autowired

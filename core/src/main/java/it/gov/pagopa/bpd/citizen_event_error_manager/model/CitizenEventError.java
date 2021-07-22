@@ -17,8 +17,6 @@ public class CitizenEventError {
 
     Boolean enabled;
 
-    String applyTo;
-
     OffsetDateTime updateDateTime;
 
     String origin;
