@@ -4,10 +4,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
 /**
- * Configuration class for the TransactionErrorPublisherConnector
+ * Configuration class for the CitizenStatusPublisherConnector
  */
 
 @Configuration
-@PropertySource("classpath:config/bpdCitizenStatusDataPublisher.properties")
+@PropertySource("classpath:config/citizenStatusPublisher.properties")
 public class BpdCitizenStatusDataPublisherConfig {
 }

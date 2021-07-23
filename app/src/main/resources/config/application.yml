@@ -33,4 +33,4 @@ meda:
 
 logging:
   level:
-    it.gov.pagopa.bpd.citizen_status_error_manager: ${LOG_LEVEL_BPD_CITIZEN_ERROR_MANAGER:DEBUG}
+    it.gov.pagopa.bpd.citizen_event_error_manager: ${LOG_LEVEL_BPD_CITIZEN_ERROR_MANAGER:DEBUG}
