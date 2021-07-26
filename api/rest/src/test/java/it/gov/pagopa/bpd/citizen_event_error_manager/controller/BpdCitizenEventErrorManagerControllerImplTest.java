@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -18,7 +19,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = BpdCitizenEventErrorManagerControllerImpl.class)
-@WebMvcTest(value = BpdCitizenEventErrorManagerControllerImpl.class, secure = false)
+@WebMvcTest(value = BpdCitizenEventErrorManagerControllerImpl.class, excludeAutoConfiguration = SecurityAutoConfiguration.class)
 @EnableWebMvc
 public class BpdCitizenEventErrorManagerControllerImplTest {
 
@@ -37,8 +38,8 @@ public class BpdCitizenEventErrorManagerControllerImplTest {
             Mockito.doReturn(true).when(submitFlaggedRecordsCommand).execute();
             mockMvc.perform(
                     MockMvcRequestBuilders.post(BASE_URL.concat("/resubmitPendingEvents"))
-                            .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-                            .accept(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .accept(MediaType.APPLICATION_JSON_VALUE))
                     .andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
                     .andReturn();
 

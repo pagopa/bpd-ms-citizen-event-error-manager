@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @RequestMapping("/bpd/citizen-event-error-manager")
 public interface BpdCitizenEventErrorManagerController {
 
-    @PostMapping(value = "/resubmitPendingEvents", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PostMapping(value = "/resubmitPendingEvents", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     void resubmitPendingEvents() throws Exception;
 
