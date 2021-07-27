@@ -2,6 +2,7 @@ package it.gov.pagopa.bpd.citizen_event_error_manager.controller;
 
 import it.gov.pagopa.bpd.citizen_event_error_manager.command.SubmitFlaggedRecordsCommand;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -30,6 +31,11 @@ public class BpdCitizenEventErrorManagerControllerImplTest {
 
     @Autowired
     MockMvc mockMvc;
+
+    @Before
+    public void initTest() {
+        Mockito.reset(submitFlaggedRecordsCommand);
+    }
 
     @Test
     public void resubmitTransactions_OK() {
